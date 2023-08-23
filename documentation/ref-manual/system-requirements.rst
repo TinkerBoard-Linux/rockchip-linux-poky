@@ -41,15 +41,21 @@ distributions:
 
 -  Ubuntu 20.04 (LTS)
 
+-  Ubuntu 22.04 (LTS)
+
 -  Fedora 34
 
 -  Fedora 35
+
+-  Fedora 36
 
 -  CentOS 7.x
 
 -  CentOS 8.x
 
 -  AlmaLinux 8.5
+
+-  AlmaLinux 8.7
 
 -  Debian GNU/Linux 9.x (Stretch)
 

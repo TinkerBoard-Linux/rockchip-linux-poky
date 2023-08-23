@@ -28,6 +28,8 @@ import signal
 import collections
 import copy
 import ctypes
+import random
+import tempfile
 from subprocess import getstatusoutput
 from contextlib import contextmanager
 from ctypes import cdll
@@ -543,7 +545,12 @@ def md5_file(filename):
     Return the hex string representation of the MD5 checksum of filename.
     """
     import hashlib
-    return _hasher(hashlib.new('MD5', usedforsecurity=False), filename)
+    try:
+        sig = hashlib.new('MD5', usedforsecurity=False)
+    except TypeError:
+        # Some configurations don't appear to support two arguments
+        sig = hashlib.new('MD5')
+    return _hasher(sig, filename)
 
 def sha256_file(filename):
     """
@@ -694,8 +701,8 @@ def remove(path, recurse=False, ionice=False):
         return
     if recurse:
         for name in glob.glob(path):
-            if _check_unsafe_delete_path(path):
-                raise Exception('bb.utils.remove: called with dangerous path "%s" and recurse=True, refusing to delete!' % path)
+            if _check_unsafe_delete_path(name):
+                raise Exception('bb.utils.remove: called with dangerous path "%s" and recurse=True, refusing to delete!' % name)
         # shutil.rmtree(name) would be ideal but its too slow
         cmd = []
         if ionice:
@@ -753,7 +760,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
         if not sstat:
             sstat = os.lstat(src)
     except Exception as e:
-        print("movefile: Stating source file failed...", e)
+        logger.warning("movefile: Stating source file failed...", e)
         return None
 
     destexists = 1
@@ -781,7 +788,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
             os.unlink(src)
             return os.lstat(dest)
         except Exception as e:
-            print("movefile: failed to properly create symlink:", dest, "->", target, e)
+            logger.warning("movefile: failed to properly create symlink:", dest, "->", target, e)
             return None
 
     renamefailed = 1
@@ -798,7 +805,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
         except Exception as e:
             if e.errno != errno.EXDEV:
                 # Some random error.
-                print("movefile: Failed to move", src, "to", dest, e)
+                logger.warning("movefile: Failed to move", src, "to", dest, e)
                 return None
             # Invalid cross-device-link 'bind' mounted or actually Cross-Device
 
@@ -810,13 +817,13 @@ def movefile(src, dest, newmtime = None, sstat = None):
                 bb.utils.rename(destpath + "#new", destpath)
                 didcopy = 1
             except Exception as e:
-                print('movefile: copy', src, '->', dest, 'failed.', e)
+                logger.warning('movefile: copy', src, '->', dest, 'failed.', e)
                 return None
         else:
             #we don't yet handle special, so we need to fall back to /bin/mv
             a = getstatusoutput("/bin/mv -f " + "'" + src + "' '" + dest + "'")
             if a[0] != 0:
-                print("movefile: Failed to move special file:" + src + "' to '" + dest + "'", a)
+                logger.warning("movefile: Failed to move special file:" + src + "' to '" + dest + "'", a)
                 return None # failure
         try:
             if didcopy:
@@ -824,7 +831,7 @@ def movefile(src, dest, newmtime = None, sstat = None):
                 os.chmod(destpath, stat.S_IMODE(sstat[stat.ST_MODE])) # Sticky is reset on chown
                 os.unlink(src)
         except Exception as e:
-            print("movefile: Failed to chown/chmod/unlink", dest, e)
+            logger.warning("movefile: Failed to chown/chmod/unlink", dest, e)
             return None
 
     if newmtime:
@@ -982,6 +989,9 @@ def to_boolean(string, default=None):
     """
     if not string:
         return default
+
+    if isinstance(string, int):
+        return string != 0
 
     normalized = string.lower()
     if normalized in ("y", "yes", "1", "true"):
@@ -1633,23 +1643,20 @@ def disable_network(uid=None, gid=None):
 
 def export_proxies(d):
     """ export common proxies variables from datastore to environment """
-    import os
 
     variables = ['http_proxy', 'HTTP_PROXY', 'https_proxy', 'HTTPS_PROXY',
                     'ftp_proxy', 'FTP_PROXY', 'no_proxy', 'NO_PROXY',
-                    'GIT_PROXY_COMMAND']
-    exported = False
+                    'GIT_PROXY_COMMAND', 'SSL_CERT_FILE', 'SSL_CERT_DIR']
 
-    for v in variables:
-        if v in os.environ.keys():
-            exported = True
-        else:
-            v_proxy = d.getVar(v)
-            if v_proxy is not None:
-                os.environ[v] = v_proxy
-                exported = True
+    origenv = d.getVar("BB_ORIGENV")
 
-    return exported
+    for name in variables:
+        value = d.getVar(name)
+        if not value and origenv:
+            value = origenv.getVar(name)
+        if value:
+            os.environ[name] = value
+
 
 
 def load_plugins(logger, plugins, pluginpath):
@@ -1756,3 +1763,22 @@ def is_local_uid(uid=''):
             if str(uid) == line_split[2]:
                 return True
     return False
+
+def mkstemp(suffix=None, prefix=None, dir=None, text=False):
+    """
+    Generates a unique filename, independent of time.
+
+    mkstemp() in glibc (at least) generates unique file names based on the
+    current system time. When combined with highly parallel builds, and
+    operating over NFS (e.g. shared sstate/downloads) this can result in
+    conflicts and race conditions.
+
+    This function adds additional entropy to the file name so that a collision
+    is independent of time and thus extremely unlikely.
+    """
+    entropy = "".join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", k=20))
+    if prefix:
+        prefix = prefix + entropy
+    else:
+        prefix = tempfile.gettempprefix() + entropy
+    return tempfile.mkstemp(suffix=suffix, prefix=prefix, dir=dir, text=text)
