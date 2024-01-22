@@ -223,7 +223,7 @@ system and gives an overview of their function and contents.
       so that it does contain ``${SRCPV}``.
 
       For more information see the
-      ":ref:`dev-manual/common-tasks:automatically incrementing a package version number`"
+      ":ref:`dev-manual/packages:automatically incrementing a package version number`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`AUTO_SYSLINUXMENU`
@@ -239,7 +239,7 @@ system and gives an overview of their function and contents.
       The list simply presents the tunes that are available. Not all tunes
       may be compatible with a particular machine configuration, or with
       each other in a
-      :ref:`Multilib <dev-manual/common-tasks:combining multiple versions of library files into one image>`
+      :ref:`Multilib <dev-manual/libraries:combining multiple versions of library files into one image>`
       configuration.
 
       To add a tune to the list, be sure to append it with spaces using the
@@ -304,7 +304,7 @@ system and gives an overview of their function and contents.
    :term:`BASE_LIB`
       The library directory name for the CPU or Application Binary
       Interface (ABI) tune. The :term:`BASE_LIB` applies only in the Multilib
-      context. See the ":ref:`dev-manual/common-tasks:combining multiple versions of library files into one image`"
+      context. See the ":ref:`dev-manual/libraries:combining multiple versions of library files into one image`"
       section in the Yocto Project Development Tasks Manual for information
       on Multilib.
 
@@ -528,7 +528,7 @@ system and gives an overview of their function and contents.
       is not set higher than "20".
 
       For more information on speeding up builds, see the
-      ":ref:`dev-manual/common-tasks:speeding up a build`"
+      ":ref:`dev-manual/speeding-up-build:speeding up a build`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`BB_SERVER_TIMEOUT`
@@ -725,7 +725,7 @@ system and gives an overview of their function and contents.
 
       For information on how to use :term:`BBMULTICONFIG` in an environment
       that supports building targets with multiple configurations, see the
-      ":ref:`dev-manual/common-tasks:building images for multiple targets using multiple configurations`"
+      ":ref:`dev-manual/building:building images for multiple targets using multiple configurations`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`BBPATH`
@@ -971,7 +971,7 @@ system and gives an overview of their function and contents.
       When inheriting the :ref:`buildhistory <ref-classes-buildhistory>`
       class, this variable specifies the build history features to be
       enabled. For more information on how build history works, see the
-      ":ref:`dev-manual/common-tasks:maintaining build output quality`"
+      ":ref:`dev-manual/build-quality:maintaining build output quality`"
       section in the Yocto Project Development Tasks Manual.
 
       You can specify these features in the form of a space-separated list:
@@ -1156,6 +1156,26 @@ system and gives an overview of their function and contents.
       optional at the distribution level, in case the hardware supports
       Bluetooth but you do not ever intend to use it.
 
+   :term:`COMMERCIAL_AUDIO_PLUGINS`
+      This variable is specific to the :yocto_git:`GStreamer recipes
+      </poky/tree/meta/recipes-multimedia/gstreamer/gstreamer1.0-meta-base.bb>`.
+      It allows to build the GStreamer `"ugly"
+      <https://github.com/GStreamer/gst-plugins-ugly>`__ and
+      `"bad" <https://github.com/GStreamer/gst-plugins-bad>`__ audio plugins.
+
+      See the :ref:`dev-manual/licenses:other variables related to commercial licenses`
+      section for usage details.
+
+   :term:`COMMERCIAL_VIDEO_PLUGINS`
+      This variable is specific to the :yocto_git:`GStreamer recipes
+      </poky/tree/meta/recipes-multimedia/gstreamer/gstreamer1.0-meta-base.bb>`.
+      It allows to build the GStreamer `"ugly"
+      <https://github.com/GStreamer/gst-plugins-ugly>`__ and
+      `"bad" <https://github.com/GStreamer/gst-plugins-bad>`__ video plugins.
+
+      See the :ref:`dev-manual/licenses:other variables related to commercial licenses`
+      section for usage details.
+
    :term:`COMMON_LICENSE_DIR`
       Points to ``meta/files/common-licenses`` in the
       :term:`Source Directory`, which is where generic license
@@ -1181,6 +1201,32 @@ system and gives an overview of their function and contents.
       useful with kernels. The variable also helps to increase parsing
       speed since the build system skips parsing recipes not compatible
       with the current machine.
+
+      If one wants to have a recipe only available for some architectures
+      (here ``aarch64`` and ``mips64``), the following can be used::
+
+         COMPATIBLE_MACHINE = "^$"
+         COMPATIBLE_MACHINE:arch64 = "^(aarch64)$"
+         COMPATIBLE_MACHINE:mips64 = "^(mips64)$"
+
+      The first line means "match all machines whose :term:`MACHINEOVERRIDES`
+      contains the empty string", which will always be none.
+
+      The second is for matching all machines whose :term:`MACHINEOVERRIDES`
+      contains one override which is exactly ``aarch64``.
+
+      The third is for matching all machines whose :term:`MACHINEOVERRIDES`
+      contains one override which is exactly ``mips64``.
+
+      The same could be achieved with::
+
+         COMPATIBLE_MACHINE = "^(aarch64|mips64)$"
+
+      .. note::
+
+         When :term:`COMPATIBLE_MACHINE` is set in a recipe inherits from
+         native, the recipe is always skipped. All native recipes must be
+         entirely target independent and should not rely on :term:`MACHINE`.
 
    :term:`COMPLEMENTARY_GLOB`
       Defines wildcards to match when installing a list of complementary
@@ -1274,8 +1320,8 @@ system and gives an overview of their function and contents.
       If you specify multiple directories and files, the initramfs image
       will be the aggregate of all of them.
 
-      For information on creating an initramfs, see the
-      ":ref:`dev-manual/common-tasks:building an initial ram filesystem (initramfs) image`" section
+      For information on creating an :term:`Initramfs`, see the
+      ":ref:`dev-manual/building:building an initial ram filesystem (Initramfs) image`" section
       in the Yocto Project Development Tasks Manual.
 
    :term:`CONFIG_SITE`
@@ -1310,7 +1356,7 @@ system and gives an overview of their function and contents.
          newly installed packages to an image, which might be most suitable for
          read-only filesystems that cannot be upgraded. See the
          :term:`LICENSE_CREATE_PACKAGE` variable for additional information.
-         You can also reference the ":ref:`dev-manual/common-tasks:providing license text`"
+         You can also reference the ":ref:`dev-manual/licenses:providing license text`"
          section in the Yocto Project Development Tasks Manual for
          information on providing license text.
 
@@ -1326,7 +1372,7 @@ system and gives an overview of their function and contents.
          newly installed packages to an image, which might be most suitable for
          read-only filesystems that cannot be upgraded. See the
          :term:`LICENSE_CREATE_PACKAGE` variable for additional information.
-         You can also reference the ":ref:`dev-manual/common-tasks:providing license text`"
+         You can also reference the ":ref:`dev-manual/licenses:providing license text`"
          section in the Yocto Project Development Tasks Manual for
          information on providing license text.
 
@@ -2071,11 +2117,10 @@ system and gives an overview of their function and contents.
       less).
 
    :term:`ERR_REPORT_DIR`
-      When used with the :ref:`report-error <ref-classes-report-error>`
-      class, specifies the path used for storing the debug files created by
-      the :ref:`error reporting
-      tool <dev-manual/common-tasks:using the error reporting tool>`, which
-      allows you to submit build errors you encounter to a central
+      When used with the :ref:`ref-classes-report-error` class, specifies the
+      path used for storing the debug files created by the :ref:`error reporting
+      tool <dev-manual/error-reporting-tool:using the error reporting tool>`,
+      which allows you to submit build errors you encounter to a central
       database. By default, the value of this variable is
       ``${``\ :term:`LOG_DIR`\ ``}/error-report``.
 
@@ -2223,6 +2268,12 @@ system and gives an overview of their function and contents.
       :ref:`kernel-yocto <ref-classes-kernel-yocto>` class in
       ``meta/classes`` to see how the variable is used.
 
+   :term:`EXTERNAL_TOOLCHAIN`
+      When you intend to use an
+      :ref:`external toolchain <dev-manual/external-toolchain:optionally using an external toolchain>`,
+      this variable allows to specify the directory where this toolchain was
+      installed.
+
    :term:`EXTERNALSRC`
       When inheriting the :ref:`externalsrc <ref-classes-externalsrc>`
       class, this variable points to the source tree, which is outside of
@@ -2232,7 +2283,7 @@ system and gives an overview of their function and contents.
 
       See the ":ref:`ref-classes-externalsrc`" section for details. You
       can also find information on how to use this variable in the
-      ":ref:`dev-manual/common-tasks:building software from an external source`"
+      ":ref:`dev-manual/building:building software from an external source`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`EXTERNALSRC_BUILD`
@@ -2245,11 +2296,11 @@ system and gives an overview of their function and contents.
 
       See the ":ref:`ref-classes-externalsrc`" section for details. You
       can also find information on how to use this variable in the
-      ":ref:`dev-manual/common-tasks:building software from an external source`"
+      ":ref:`dev-manual/building:building software from an external source`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`EXTRA_AUTORECONF`
-      For recipes inheriting the :ref:`autotools <ref-classes-autotools>`
+      For recipes inheriting the :ref:`ref-classes-autotools`
       class, you can use :term:`EXTRA_AUTORECONF` to specify extra options to
       pass to the ``autoreconf`` command that is executed during the
       :ref:`ref-tasks-configure` task.
@@ -2283,7 +2334,7 @@ system and gives an overview of their function and contents.
           useful if you want to develop against the libraries in the image.
         - "read-only-rootfs" - Creates an image whose root filesystem is
           read-only. See the
-          ":ref:`dev-manual/common-tasks:creating a read-only root filesystem`"
+          ":ref:`dev-manual/read-only-rootfs:creating a read-only root filesystem`"
           section in the Yocto Project Development Tasks Manual for more
           information
         - "tools-debug" - Adds debugging tools such as gdb and strace.
@@ -2296,7 +2347,7 @@ system and gives an overview of their function and contents.
       Project, see the ":ref:`ref-features-image`" section.
 
       For an example that shows how to customize your image by using this
-      variable, see the ":ref:`dev-manual/common-tasks:customizing images using custom \`\`image_features\`\` and \`\`extra_image_features\`\``"
+      variable, see the ":ref:`dev-manual/customizing-images:customizing images using custom \`\`image_features\`\` and \`\`extra_image_features\`\``"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`EXTRA_IMAGECMD`
@@ -2344,6 +2395,20 @@ system and gives an overview of their function and contents.
       When inheriting the :ref:`scons <ref-classes-scons>` class, this
       variable specifies additional configuration options you want to pass
       to the ``scons`` command line.
+
+   :term:`EXTRA_OEMESON`
+      Additional `Meson <https://mesonbuild.com/>`__ options. See the
+      :ref:`ref-classes-meson` class for additional information.
+
+      In addition to standard Meson options, such options correspond to
+      `Meson build options <https://mesonbuild.com/Build-options.html>`__
+      defined in the ``meson_options.txt`` file in the sources to build.
+      Here is an example::
+
+         EXTRA_OEMESON = "-Dpython=disabled -Dvalgrind=disabled"
+
+      Note that any custom value for the Meson ``--buildtype`` option
+      should be set through the :term:`MESON_BUILDTYPE` variable.
 
    :term:`EXTRA_USERS_PARAMS`
       When inheriting the :ref:`extrausers <ref-classes-extrausers>`
@@ -2641,7 +2706,7 @@ system and gives an overview of their function and contents.
       You can find out more about the patching process in the
       ":ref:`overview-manual/concepts:patching`" section
       in the Yocto Project Overview and Concepts Manual and the
-      ":ref:`dev-manual/common-tasks:patching code`" section in
+      ":ref:`dev-manual/new-recipe:patching code`" section in
       the Yocto Project Development Tasks Manual. See the
       :ref:`ref-tasks-patch` task as well.
 
@@ -2773,7 +2838,7 @@ system and gives an overview of their function and contents.
       Allows to specify an extra search path for ``.so`` files
       in GLib related recipes using GObject introspection,
       and which do not compile without this setting.
-      See the ":ref:`dev-manual/common-tasks:enabling gobject introspection support`"
+      See the ":ref:`dev-manual/gobject-introspection:enabling gobject introspection support`"
       section for details.
 
    :term:`GITDIR`
@@ -3058,7 +3123,7 @@ system and gives an overview of their function and contents.
       the same files into a ``boot`` directory within the target partition.
 
       You can find information on how to use the Wic tool in the
-      ":ref:`dev-manual/common-tasks:creating partitioned images using wic`"
+      ":ref:`dev-manual/wic:creating partitioned images using wic`"
       section of the Yocto Project Development Tasks Manual. Reference
       material for Wic is located in the
       ":doc:`/ref-manual/kickstart`" chapter.
@@ -3130,7 +3195,7 @@ system and gives an overview of their function and contents.
       the same files into a ``boot`` directory within the target partition.
 
       You can find information on how to use the Wic tool in the
-      ":ref:`dev-manual/common-tasks:creating partitioned images using wic`"
+      ":ref:`dev-manual/wic:creating partitioned images using wic`"
       section of the Yocto Project Development Tasks Manual. Reference
       material for Wic is located in the
       ":doc:`/ref-manual/kickstart`" chapter.
@@ -3151,7 +3216,7 @@ system and gives an overview of their function and contents.
       the ":ref:`ref-features-image`" section.
 
       For an example that shows how to customize your image by using this
-      variable, see the ":ref:`dev-manual/common-tasks:customizing images using custom \`\`image_features\`\` and \`\`extra_image_features\`\``"
+      variable, see the ":ref:`dev-manual/customizing-images:customizing images using custom \`\`image_features\`\` and \`\`extra_image_features\`\``"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`IMAGE_FSTYPES`
@@ -3206,8 +3271,8 @@ system and gives an overview of their function and contents.
             :term:`PACKAGE_INSTALL` variable, which
             allows the initial RAM filesystem (initramfs) recipe to use a
             fixed set of packages and not be affected by :term:`IMAGE_INSTALL`.
-            For information on creating an initramfs, see the
-            ":ref:`dev-manual/common-tasks:building an initial ram filesystem (initramfs) image`"
+            For information on creating an :term:`Initramfs`, see the
+            ":ref:`dev-manual/building:building an initial ram filesystem (Initramfs) image`"
             section in the Yocto Project Development Tasks Manual.
 
          -  Using :term:`IMAGE_INSTALL` with the
@@ -3547,9 +3612,18 @@ system and gives an overview of their function and contents.
    :term:`INCOMPATIBLE_LICENSE`
       Specifies a space-separated list of license names (as they would
       appear in :term:`LICENSE`) that should be excluded
-      from the build. Recipes that provide no alternatives to listed
+      from the build (if set globally), or from an image (if set locally
+      in an image recipe).
+
+      When the variable is set globally, recipes that provide no alternatives to listed
       incompatible licenses are not built. Packages that are individually
       licensed with the specified incompatible licenses will be deleted.
+      Most of the time this does not allow a feasible build (because it becomes impossible
+      to satisfy build time dependencies), so the recommended way to
+      implement license restrictions is to set the variable in specific
+      image recipes where the restrictions must apply. That way there
+      are no build time restrictions, but the license check is still
+      performed when the image's filesystem is assembled from packages.
 
       There is some support for wildcards in this variable's value,
       however it is restricted to specific licenses. Currently only
@@ -3646,6 +3720,21 @@ system and gives an overview of their function and contents.
          even if the toolchain's binaries are strippable, there are other files
          needed for the build that are not strippable.
 
+   :term:`INIT_MANAGER`
+      Specifies the system init manager to use. Available options are:
+
+      -  ``sysvinit`` - System V init (default for poky)
+      -  ``systemd`` - systemd
+      -  ``mdev-busybox`` - mdev provided by busybox
+      -  ``none`` - no init manager
+
+      More concretely, this is used to include
+      ``conf/distro/include/init-manager-${INIT_MANAGER}.inc`` into the global
+      configuration. You can have a look at the ``conf/distro/include/init-manager-*.inc``
+      files for more information, and also the
+      ":ref:`dev-manual/init-manager:selecting an initialization manager`"
+      section in the Yocto Project Development Tasks Manual.
+
    :term:`INITRAMFS_DEPLOY_DIR_IMAGE`
       Indicates the deploy directory used by ``do_bundle_initramfs`` where the
       :term:`INITRAMFS_IMAGE` will be fetched from.
@@ -3700,8 +3789,8 @@ system and gives an overview of their function and contents.
       For more information, you can also see the
       :term:`INITRAMFS_IMAGE_BUNDLE`
       variable, which allows the generated image to be bundled inside the
-      kernel image. Additionally, for information on creating an initramfs
-      image, see the ":ref:`dev-manual/common-tasks:building an initial ram filesystem (initramfs) image`" section
+      kernel image. Additionally, for information on creating an :term:`Initramfs`
+      image, see the ":ref:`dev-manual/building:building an initial ram filesystem (Initramfs) image`" section
       in the Yocto Project Development Tasks Manual.
 
    :term:`INITRAMFS_IMAGE_BUNDLE`
@@ -3753,7 +3842,7 @@ system and gives an overview of their function and contents.
       See the
       :yocto_git:`local.conf.sample.extended </poky/tree/meta-poky/conf/local.conf.sample.extended>`
       file for additional information. Also, for information on creating an
-      initramfs, see the ":ref:`dev-manual/common-tasks:building an initial ram filesystem (initramfs) image`" section
+      :term:`Initramfs`, see the ":ref:`dev-manual/building:building an initial ram filesystem (Initramfs) image`" section
       in the Yocto Project Development Tasks Manual.
 
    :term:`INITRAMFS_LINK_NAME`
@@ -3778,8 +3867,8 @@ system and gives an overview of their function and contents.
       This allows the kernel to bundle an :term:`INITRAMFS_IMAGE` coming from
       a separate multiconfig, this is meant to be used in addition to :term:`INITRAMFS_DEPLOY_DIR_IMAGE`.
 
-      For more information on how to bundle an initramfs image from a separate
-      multiconfig see the ":ref:`dev-manual/common-tasks:Bundling an Initramfs Image From a Separate Multiconfig`"
+      For more information on how to bundle an :term:`Initramfs` image from a separate
+      multiconfig see the ":ref:`dev-manual/building:Bundling an Initramfs Image From a Separate Multiconfig`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`INITRAMFS_NAME`
@@ -3888,7 +3977,7 @@ system and gives an overview of their function and contents.
 
       Values for this variable are set in the kernel's recipe file and the
       kernel's append file. For example, if you are using the
-      ``linux-yocto_4.12`` kernel, the kernel recipe file is the
+      ``linux-yocto_5.15`` kernel, the kernel recipe file is the
       ``meta/recipes-kernel/linux/linux-yocto_4.12.bb`` file. :term:`KBRANCH`
       is set as follows in that kernel recipe file::
 
@@ -3901,13 +3990,13 @@ system and gives an overview of their function and contents.
       BSP layer for a given machine. For example, the append file for the
       Beaglebone, EdgeRouter, and generic versions of both 32 and 64-bit IA
       machines (``meta-yocto-bsp``) is named
-      ``meta-yocto-bsp/recipes-kernel/linux/linux-yocto_4.12.bbappend``.
+      ``meta-yocto-bsp/recipes-kernel/linux/linux-yocto_4.15.bbappend``.
       Here are the related statements from that append file::
 
-         KBRANCH:genericx86 = "standard/base"
-         KBRANCH:genericx86-64 = "standard/base"
-         KBRANCH:edgerouter = "standard/edgerouter"
-         KBRANCH:beaglebone = "standard/beaglebone"
+         KBRANCH:genericx86  = "v5.15/standard/base"
+         KBRANCH:genericx86-64  = "v5.15/standard/base"
+         KBRANCH:edgerouter = "v5.15/standard/edgerouter"
+         KBRANCH:beaglebone-yocto = "v5.15/standard/beaglebone"
 
       The :term:`KBRANCH` statements
       identify the kernel branch to use when building for each supported
@@ -4373,7 +4462,7 @@ system and gives an overview of their function and contents.
          The OpenEmbedded build system produces a warning if the variable
          is not set for any given layer.
 
-      See the ":ref:`dev-manual/common-tasks:creating your own layer`"
+      See the ":ref:`dev-manual/layers:creating your own layer`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`LAYERVERSION`
@@ -4422,7 +4511,7 @@ system and gives an overview of their function and contents.
       This variable must be defined for all recipes (unless
       :term:`LICENSE` is set to "CLOSED").
 
-      For more information, see the ":ref:`dev-manual/common-tasks:tracking license changes`"
+      For more information, see the ":ref:`dev-manual/licenses:tracking license changes`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`LICENSE`
@@ -4486,7 +4575,7 @@ system and gives an overview of their function and contents.
       For related information on providing license text, see the
       :term:`COPY_LIC_DIRS` variable, the
       :term:`COPY_LIC_MANIFEST` variable, and the
-      ":ref:`dev-manual/common-tasks:providing license text`"
+      ":ref:`dev-manual/licenses:providing license text`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`LICENSE_FLAGS`
@@ -4499,14 +4588,14 @@ system and gives an overview of their function and contents.
       typically used to mark recipes that might require additional licenses
       in order to be used in a commercial product. For more information,
       see the
-      ":ref:`dev-manual/common-tasks:enabling commercially licensed recipes`"
+      ":ref:`dev-manual/licenses:enabling commercially licensed recipes`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`LICENSE_FLAGS_ACCEPTED`
       Lists license flags that when specified in
       :term:`LICENSE_FLAGS` within a recipe should not
       prevent that recipe from being built.  For more information, see the
-      ":ref:`dev-manual/common-tasks:enabling commercially licensed recipes`"
+      ":ref:`dev-manual/licenses:enabling commercially licensed recipes`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`LICENSE_PATH`
@@ -4785,6 +4874,17 @@ system and gives an overview of their function and contents.
    :term:`MAINTAINER`
       The email address of the distribution maintainer.
 
+   :term:`MESON_BUILDTYPE`
+      Value of the Meson ``--buildtype`` argument used by the
+      :ref:`ref-classes-meson` class. It defaults to ``debug`` if
+      :term:`DEBUG_BUILD` is set to "1", and ``plain`` otherwise.
+
+      See `Meson build options <https://mesonbuild.com/Builtin-options.html>`__
+      for the values you could set in a recipe. Values such as ``plain``,
+      ``debug``, ``debugoptimized``, ``release`` and ``minsize`` allow
+      you to specify the inclusion of debugging symbols and the compiler
+      optimizations (none, performance or size).
+
    :term:`METADATA_BRANCH`
       The branch currently checked out for the OpenEmbedded-Core layer (path
       determined by :term:`COREBASE`).
@@ -4792,6 +4892,13 @@ system and gives an overview of their function and contents.
    :term:`METADATA_REVISION`
       The revision currently checked out for the OpenEmbedded-Core layer (path
       determined by :term:`COREBASE`).
+
+   :term:`MIME_XDG_PACKAGES`
+      The current implementation of the :ref:`mime-xdg <ref-classes-mime-xdg>`
+      class cannot detect ``.desktop`` files installed through absolute
+      symbolic links. Use this setting to make the class create post-install
+      and post-remove scripts for these packages anyway, to invoke the
+      ``update-destop-database`` command.
 
    :term:`MIRRORS`
       Specifies additional paths from which the OpenEmbedded build system
@@ -5055,7 +5162,7 @@ system and gives an overview of their function and contents.
       Controls how the OpenEmbedded build system spawns interactive
       terminals on the host development system (e.g. using the BitBake
       command with the ``-c devshell`` command-line option). For more
-      information, see the ":ref:`dev-manual/common-tasks:using a development shell`" section in
+      information, see the ":ref:`dev-manual/development-shell:using a development shell`" section in
       the Yocto Project Development Tasks Manual.
 
       You can use the following values for the :term:`OE_TERMINAL` variable:
@@ -5122,7 +5229,7 @@ system and gives an overview of their function and contents.
 
          An easy way to see what overrides apply is to search for :term:`OVERRIDES`
          in the output of the ``bitbake -e`` command. See the
-         ":ref:`dev-manual/common-tasks:viewing variable values`" section in the Yocto
+         ":ref:`dev-manual/debugging:viewing variable values`" section in the Yocto
          Project Development Tasks Manual for more information.
 
    :term:`P`
@@ -5143,7 +5250,7 @@ system and gives an overview of their function and contents.
       specific by using the package name as a suffix.
 
       You can find out more about applying this variable in the
-      ":ref:`dev-manual/common-tasks:adding custom metadata to packages`"
+      ":ref:`dev-manual/packages:adding custom metadata to packages`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`PACKAGE_ARCH`
@@ -5250,7 +5357,7 @@ system and gives an overview of their function and contents.
          use of the :term:`INHIBIT_PACKAGE_DEBUG_SPLIT` variable.
 
       You can find out more about debugging using GDB by reading the
-      ":ref:`dev-manual/common-tasks:debugging with the gnu project debugger (gdb) remotely`" section
+      ":ref:`dev-manual/debugging:debugging with the gnu project debugger (gdb) remotely`" section
       in the Yocto Project Development Tasks Manual.
 
    :term:`PACKAGE_EXCLUDE`
@@ -5409,7 +5516,7 @@ system and gives an overview of their function and contents.
       the :ref:`core-image-minimal-initramfs <ref-manual/images:images>`
       image. When working with an initial RAM filesystem (initramfs) image,
       use the :term:`PACKAGE_INSTALL` variable. For information on creating an
-      initramfs, see the ":ref:`dev-manual/common-tasks:building an initial ram filesystem (initramfs) image`" section
+      :term:`Initramfs`, see the ":ref:`dev-manual/building:building an initial ram filesystem (Initramfs) image`" section
       in the Yocto Project Development Tasks Manual.
 
    :term:`PACKAGE_INSTALL_ATTEMPTONLY`
@@ -5432,7 +5539,7 @@ system and gives an overview of their function and contents.
       :term:`PACKAGE_WRITE_DEPS`.
 
       For information on running post-installation scripts, see the
-      ":ref:`dev-manual/common-tasks:post-installation scripts`"
+      ":ref:`dev-manual/new-recipe:post-installation scripts`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`PACKAGECONFIG`
@@ -5460,25 +5567,23 @@ system and gives an overview of their function and contents.
       omit any argument you like but must retain the separating commas. The
       order is important and specifies the following:
 
-      1. Extra arguments that should be added to the configure script
-         argument list (:term:`EXTRA_OECONF` or
-         :term:`PACKAGECONFIG_CONFARGS`) if
-         the feature is enabled.
+      #. Extra arguments that should be added to :term:`PACKAGECONFIG_CONFARGS`
+         if the feature is enabled.
 
-      2. Extra arguments that should be added to :term:`EXTRA_OECONF` or
-         :term:`PACKAGECONFIG_CONFARGS` if the feature is disabled.
+      #. Extra arguments that should be added to :term:`PACKAGECONFIG_CONFARGS`
+         if the feature is disabled.
 
-      3. Additional build dependencies (:term:`DEPENDS`)
+      #. Additional build dependencies (:term:`DEPENDS`)
          that should be added if the feature is enabled.
 
-      4. Additional runtime dependencies (:term:`RDEPENDS`)
+      #. Additional runtime dependencies (:term:`RDEPENDS`)
          that should be added if the feature is enabled.
 
-      5. Additional runtime recommendations
+      #. Additional runtime recommendations
          (:term:`RRECOMMENDS`) that should be added if
          the feature is enabled.
 
-      6. Any conflicting (that is, mutually exclusive) :term:`PACKAGECONFIG`
+      #. Any conflicting (that is, mutually exclusive) :term:`PACKAGECONFIG`
          settings for this feature.
 
       Consider the following :term:`PACKAGECONFIG` block taken from the
@@ -5524,6 +5629,38 @@ system and gives an overview of their function and contents.
          Or, you can just amend the variable::
 
             PACKAGECONFIG:append:pn-recipename = " f4"
+
+      Consider the following example of a :ref:`ref-classes-cmake` recipe with a systemd service
+      in which :term:`PACKAGECONFIG` is used to transform the systemd service
+      into a feature that can be easily enabled or disabled via :term:`PACKAGECONFIG`::
+
+         example.c
+         example.service
+         CMakeLists.txt
+
+      The ``CMakeLists.txt`` file contains::
+
+         if(WITH_SYSTEMD)
+            install(FILES ${PROJECT_SOURCE_DIR}/example.service DESTINATION /etc/systemd/systemd)
+         endif(WITH_SYSTEMD)
+
+      In order to enable the installation of ``example.service`` we need to
+      ensure that ``-DWITH_SYSTEMD=ON`` is passed to the ``cmake`` command
+      execution.  Recipes that have ``CMakeLists.txt`` generally inherit the
+      :ref:`ref-classes-cmake` class, that runs ``cmake`` with
+      :term:`EXTRA_OECMAKE`, which :term:`PACKAGECONFIG_CONFARGS` will be
+      appended to.  Now, knowing that :term:`PACKAGECONFIG_CONFARGS` is
+      automatically filled with either the first or second element of
+      :term:`PACKAGECONFIG` flag value, the recipe would be like::
+
+         inherit cmake
+         PACKAGECONFIG = "systemd"
+         PACKAGECONFIG[systemd] = "-DWITH_SYSTEMD=ON,-DWITH_SYSTEMD=OFF"
+
+      A side note to this recipe is to check if ``systemd`` is in fact the used :term:`INIT_MANAGER`
+      or not::
+
+         PACKAGECONFIG = "${@'systemd' if d.getVar('INIT_MANAGER') == 'systemd' else ''}"
 
    :term:`PACKAGECONFIG_CONFARGS`
       A space-separated list of configuration options generated from the
@@ -5583,7 +5720,7 @@ system and gives an overview of their function and contents.
 
       For an example of how to use the :term:`PACKAGES_DYNAMIC` variable when
       you are splitting packages, see the
-      ":ref:`dev-manual/common-tasks:handling optional module packaging`"
+      ":ref:`dev-manual/packages:handling optional module packaging`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`PACKAGESPLITFUNCS`
@@ -5618,7 +5755,7 @@ system and gives an overview of their function and contents.
          the ``do_compile`` task that result in race conditions, you can clear
          the :term:`PARALLEL_MAKE` variable within the recipe as a workaround. For
          information on addressing race conditions, see the
-         ":ref:`dev-manual/common-tasks:debugging parallel make races`"
+         ":ref:`dev-manual/debugging:debugging parallel make races`"
          section in the Yocto Project Development Tasks Manual.
 
       For single socket systems (i.e. one CPU), you should not have to
@@ -5628,7 +5765,7 @@ system and gives an overview of their function and contents.
       not set higher than "-j 20".
 
       For more information on speeding up builds, see the
-      ":ref:`dev-manual/common-tasks:speeding up a build`"
+      ":ref:`dev-manual/speeding-up-build:speeding up a build`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`PARALLEL_MAKEINST`
@@ -5648,7 +5785,7 @@ system and gives an overview of their function and contents.
          the ``do_install`` task that result in race conditions, you can
          clear the :term:`PARALLEL_MAKEINST` variable within the recipe as a
          workaround. For information on addressing race conditions, see the
-         ":ref:`dev-manual/common-tasks:debugging parallel make races`"
+         ":ref:`dev-manual/debugging:debugging parallel make races`"
          section in the Yocto Project Development Tasks Manual.
 
    :term:`PATCHRESOLVE`
@@ -5748,7 +5885,7 @@ system and gives an overview of their function and contents.
       For examples of how this data is used, see the
       ":ref:`overview-manual/concepts:automatically added runtime dependencies`"
       section in the Yocto Project Overview and Concepts Manual and the
-      ":ref:`dev-manual/common-tasks:viewing package information with \`\`oe-pkgdata-util\`\``"
+      ":ref:`dev-manual/debugging:viewing package information with \`\`oe-pkgdata-util\`\``"
       section in the Yocto Project Development Tasks Manual. For more
       information on the shared, global-state directory, see
       :term:`STAGING_DIR_HOST`.
@@ -5864,7 +6001,7 @@ system and gives an overview of their function and contents.
 
       Because manually managing :term:`PR` can be cumbersome and error-prone,
       an automated solution exists. See the
-      ":ref:`dev-manual/common-tasks:working with a pr service`" section
+      ":ref:`dev-manual/packages:working with a pr service`" section
       in the Yocto Project Development Tasks Manual for more information.
 
    :term:`PREFERRED_PROVIDER`
@@ -5887,7 +6024,7 @@ system and gives an overview of their function and contents.
          PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 
       For more
-      information, see the ":ref:`dev-manual/common-tasks:using virtual providers`"
+      information, see the ":ref:`dev-manual/new-recipe:using virtual providers`"
       section in the Yocto Project Development Tasks Manual.
 
       .. note::
@@ -6087,7 +6224,7 @@ system and gives an overview of their function and contents.
 
       You must
       set the variable if you want to automatically start a local :ref:`PR
-      service <dev-manual/common-tasks:working with a pr service>`. You can
+      service <dev-manual/packages:working with a pr service>`. You can
       set :term:`PRSERV_HOST` to other values to use a remote PR service.
 
 
@@ -6101,7 +6238,7 @@ system and gives an overview of their function and contents.
 
    :term:`PTEST_ENABLED`
       Specifies whether or not :ref:`Package
-      Test <dev-manual/common-tasks:testing packages with ptest>` (ptest)
+      Test <dev-manual/packages:testing packages with ptest>` (ptest)
       functionality is enabled when building a recipe. You should not set
       this variable directly. Enabling and disabling building Package Tests
       at build time should be done by adding "ptest" to (or removing it
@@ -6318,6 +6455,39 @@ system and gives an overview of their function and contents.
       ``devtool check-upgrade-status`` command to display it, as explained
       in the ":ref:`ref-manual/devtool-reference:checking on the upgrade status of a recipe`"
       section.
+
+   :term:`RECIPE_SYSROOT`
+      This variable points to the directory that holds all files populated from
+      recipes specified in :term:`DEPENDS`. As the name indicates,
+      think of this variable as a custom root (``/``) for the recipe that will be
+      used by the compiler in order to find headers and other files needed to complete
+      its job.
+
+      This variable is related to :term:`STAGING_DIR_HOST` or :term:`STAGING_DIR_TARGET`
+      according to the type of the recipe and the build target.
+
+      To better understand this variable, consider the following examples:
+
+      -  For ``#include <header.h>``, ``header.h`` should be in ``"${RECIPE_SYSROOT}/usr/include"``
+
+      -  For ``-lexample``, ``libexample.so`` should be in ``"${RECIPE_SYSROOT}/lib"``
+         or other library sysroot directories.
+
+      The default value is ``"${WORKDIR}/recipe-sysroot"``.
+      Do not modify it.
+
+   :term:`RECIPE_SYSROOT_NATIVE`
+      This is similar to :term:`RECIPE_SYSROOT` but the populated files are from
+      ``-native`` recipes. This allows a recipe built for the target machine to
+      use ``native`` tools.
+
+      This variable is related to :term:`STAGING_DIR_NATIVE`.
+
+      The default value is ``"${WORKDIR}/recipe-sysroot-native"``.
+      Do not modify it.
+
+   :term:`REPODIR`
+      See :term:`bitbake:REPODIR` in the BitBake manual.
 
    :term:`REQUIRED_DISTRO_FEATURES`
       When inheriting the
@@ -7213,9 +7383,41 @@ system and gives an overview of their function and contents.
       various ``SPL_*`` variables used by the OpenEmbedded build system.
 
       See the BeagleBone machine configuration example in the
-      ":ref:`dev-manual/common-tasks:adding a layer using the \`\`bitbake-layers\`\` script`"
+      ":ref:`dev-manual/layers:adding a layer using the \`\`bitbake-layers\`\` script`"
       section in the Yocto Project Board Support Package Developer's Guide
       for additional information.
+
+   :term:`SPLASH_IMAGES`
+      This variable, used by the ``psplash`` recipe, allows to customize
+      the default splashscreen image.
+
+      Specified images in PNG format are converted to ``.h`` files by the recipe,
+      and are included in the ``psplash`` binary, so you won't find them in
+      the root filesystem.
+
+      To make such a change, it is recommended to customize the
+      ``psplash`` recipe in a custom layer. Here is an example structure for
+      an ``ACME`` board::
+
+          meta-acme/recipes-core/psplash
+          ├── files
+          │   └── logo-acme.png
+          └── psplash_%.bbappend
+
+      And here are the contents of the ``psplash_%.bbappend`` file in
+      this example::
+
+          SPLASH_IMAGES = "file://logo-acme.png;outsuffix=default"
+          FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
+
+      You could even add specific configuration options for ``psplash``,
+      for example::
+
+          EXTRA_OECONF += "--disable-startup-msg --enable-img-fullscreen"
+
+      For information on append files, see the
+      ":ref:`dev-manual/layers:appending other layers metadata with your layer`"
+      section.
 
    :term:`SRC_URI`
 
@@ -7298,14 +7500,14 @@ system and gives an overview of their function and contents.
       that if you want to build a fixed revision and you want to avoid
       performing a query on the remote repository every time BitBake parses
       your recipe, you should specify a :term:`SRCREV` that is a full revision
-      identifier and not just a tag.
+      identifier (e.g. the full SHA hash in git) and not just a tag.
 
       .. note::
 
          For information on limitations when inheriting the latest revision
          of software using :term:`SRCREV`, see the :term:`AUTOREV` variable
          description and the
-         ":ref:`dev-manual/common-tasks:automatically incrementing a package version number`"
+         ":ref:`dev-manual/packages:automatically incrementing a package version number`"
          section, which is in the Yocto Project Development Tasks Manual.
 
    :term:`SRCTREECOVEREDTASKS`
@@ -7521,9 +7723,14 @@ system and gives an overview of their function and contents.
             for ``-native`` recipes, as they make use of host headers and
             libraries.
 
+      Check :term:`RECIPE_SYSROOT` and :term:`RECIPE_SYSROOT_NATIVE`.
+
    :term:`STAGING_DIR_NATIVE`
       Specifies the path to the sysroot directory used when building
       components that run on the build host itself.
+
+      The default value is ``"${RECIPE_SYSROOT_NATIVE}"``,
+      check :term:`RECIPE_SYSROOT_NATIVE`.
 
    :term:`STAGING_DIR_TARGET`
       Specifies the path to the sysroot used for the system for which the
@@ -7706,6 +7913,35 @@ system and gives an overview of their function and contents.
              ${libdir}/${BPN}/ptest \
              "
 
+      Consider the following example in which you need to manipulate this variable.
+      Assume you have a recipe ``A`` that provides a shared library ``.so.*`` that is
+      installed into a custom folder other than "``${libdir}``"
+      or "``${base_libdir}``", let's say "``/opt/lib``".
+
+      .. note::
+
+         This is not a recommended way to deal with shared libraries, but this
+         is just to show the usefulness of setting :term:`SYSROOT_DIRS`.
+
+      When a recipe ``B`` :term:`DEPENDS` on ``A``, it means what is in
+      :term:`SYSROOT_DIRS` will be copied from :term:`D` of the recipe ``B``
+      into ``B``'s :term:`SYSROOT_DESTDIR` that is "``${WORKDIR}/sysroot-destdir``".
+
+      Now, since ``/opt/lib`` is not in :term:`SYSROOT_DIRS`, it will never be copied to
+      ``A``'s :term:`RECIPE_SYSROOT`, which is "``${WORKDIR}/recipe-sysroot``". So,
+      the linking process will fail.
+
+      To fix this, you need to add ``/opt/lib`` to :term:`SYSROOT_DIRS`::
+
+         SYSROOT_DIRS:append = " /opt/lib"
+
+      .. note::
+         Even after setting ``/opt/lib`` to :term:`SYSROOT_DIRS`, the linking process will still fail
+         because the linker does not know that location, since :term:`TARGET_LDFLAGS`
+         doesn't contain it (if your recipe is for the target). Therefore, so you should add::
+
+            TARGET_LDFLAGS:append = " -L${RECIPE_SYSROOT}/opt/lib"
+
    :term:`SYSROOT_DIRS_NATIVE`
       Extra directories staged into the sysroot by the
       :ref:`ref-tasks-populate_sysroot` task for
@@ -7807,8 +8043,7 @@ system and gives an overview of their function and contents.
          SYSTEMD_SERVICE:${PN} = "connman.service"
 
    :term:`SYSVINIT_ENABLED_GETTYS`
-      When using
-      :ref:`SysVinit <dev-manual/common-tasks:enabling system services>`,
+      When using :ref:`SysVinit <dev-manual/new-recipe:enabling system services>`,
       specifies a space-separated list of the virtual terminals that should
       run a `getty <https://en.wikipedia.org/wiki/Getty_%28Unix%29>`__
       (allowing login), assuming :term:`USE_VT` is not set to
@@ -8090,7 +8325,7 @@ system and gives an overview of their function and contents.
       file.
 
       For more information on testing images, see the
-      ":ref:`dev-manual/common-tasks:performing automated runtime testing`"
+      ":ref:`dev-manual/runtime-testing:performing automated runtime testing`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`TEST_SERIALCONTROL_CMD`
@@ -8163,7 +8398,7 @@ system and gives an overview of their function and contents.
          TEST_SUITES = "test_A test_B"
 
       For more information on testing images, see the
-      ":ref:`dev-manual/common-tasks:performing automated runtime testing`"
+      ":ref:`dev-manual/runtime-testing:performing automated runtime testing`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`TEST_TARGET`
@@ -8182,7 +8417,7 @@ system and gives an overview of their function and contents.
       You can provide the following arguments with :term:`TEST_TARGET`:
 
       -  *"qemu":* Boots a QEMU image and runs the tests. See the
-         ":ref:`dev-manual/common-tasks:enabling runtime tests on qemu`" section
+         ":ref:`dev-manual/runtime-testing:enabling runtime tests on qemu`" section
          in the Yocto Project Development Tasks Manual for more
          information.
 
@@ -8198,7 +8433,7 @@ system and gives an overview of their function and contents.
             ``meta/lib/oeqa/controllers/simpleremote.py``.
 
       For information on running tests on hardware, see the
-      ":ref:`dev-manual/common-tasks:enabling runtime tests on hardware`"
+      ":ref:`dev-manual/runtime-testing:enabling runtime tests on hardware`"
       section in the Yocto Project Development Tasks Manual.
 
    :term:`TEST_TARGET_IP`
@@ -8235,7 +8470,7 @@ system and gives an overview of their function and contents.
 
       For more information
       on enabling, running, and writing these tests, see the
-      ":ref:`dev-manual/common-tasks:performing automated runtime testing`"
+      ":ref:`dev-manual/runtime-testing:performing automated runtime testing`"
       section in the Yocto Project Development Tasks Manual and the
       ":ref:`ref-classes-testimage*`" section.
 
@@ -8301,6 +8536,16 @@ system and gives an overview of their function and contents.
       This variable allows to extend what is installed in the host
       portion of an eSDK. This is similar to :term:`TOOLCHAIN_HOST_TASK`
       applying to SDKs.
+
+   :term:`TOOLCHAIN_OPTIONS`
+      This variable holds extra options passed to the compiler and the linker
+      for non ``-native`` recipes as they have to point to their custom
+      ``sysroot`` folder pointed to by :term:`RECIPE_SYSROOT`::
+
+         TOOLCHAIN_OPTIONS = " --sysroot=${RECIPE_SYSROOT}"
+
+      Native recipes don't need this variable to be set, as they are
+      built for the host machine with the native compiler.
 
    :term:`TOOLCHAIN_OUTPUTNAME`
       This variable defines the name used for the toolchain output. The
@@ -8694,16 +8939,15 @@ system and gives an overview of their function and contents.
       specifically set. Typically, you would set :term:`USE_DEVFS` to "0" for a
       statically populated ``/dev`` directory.
 
-      See the ":ref:`dev-manual/common-tasks:selecting a device manager`" section in
+      See the ":ref:`dev-manual/device-manager:selecting a device manager`" section in
       the Yocto Project Development Tasks Manual for information on how to
       use this variable.
 
    :term:`USE_VT`
       When using
-      :ref:`SysVinit <dev-manual/common-tasks:enabling system services>`,
-      determines whether or not to run a
-      `getty <https://en.wikipedia.org/wiki/Getty_%28Unix%29>`__ on any
-      virtual terminals in order to enable logging in through those
+      :ref:`SysVinit <dev-manual/new-recipe:enabling system services>`,
+      determines whether or not to run a :wikipedia:`getty <Getty_(Unix)>`
+      on any virtual terminals in order to enable logging in through those
       terminals.
 
       The default value used for :term:`USE_VT` is "1" when no default value is
@@ -8868,7 +9112,7 @@ system and gives an overview of their function and contents.
       OpenEmbedded build system to create a partitioned image
       (``image.wic``). For information on how to create a partitioned
       image, see the
-      ":ref:`dev-manual/common-tasks:creating partitioned images using wic`"
+      ":ref:`dev-manual/wic:creating partitioned images using wic`"
       section in the Yocto Project Development Tasks Manual. For details on
       the kickstart file format, see the ":doc:`/ref-manual/kickstart`" Chapter.
 
@@ -8895,6 +9139,19 @@ system and gives an overview of their function and contents.
       In the
       previous example, some-native-tool would be replaced with an actual
       native tool on which the build would depend.
+
+   :term:`WKS_FILES`
+      Specifies a list of candidate Wic kickstart files to be used by the
+      OpenEmbedded build system to create a partitioned image. Only the
+      first one that is found, from left to right, will be used.
+
+      This is only useful when there are multiple ``.wks`` files that can be
+      used to produce an image. A typical case is when multiple layers are
+      used for different hardware platforms, each supplying a different
+      ``.wks`` file. In this case, you specify all possible ones through
+      :term:`WKS_FILES`.
+
+      If only one ``.wks`` file is used, set :term:`WKS_FILE` instead.
 
    :term:`WORKDIR`
       The pathname of the work directory in which the OpenEmbedded build
