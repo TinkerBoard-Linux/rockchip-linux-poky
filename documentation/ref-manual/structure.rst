@@ -213,8 +213,8 @@ These files are standard top-level files.
 
 .. _structure-build:
 
-The Build Directory - ``build/``
-================================
+The Build Directory --- ``build/``
+==================================
 
 The OpenEmbedded build system creates the :term:`Build Directory`
 when you run the build environment setup
@@ -530,7 +530,7 @@ recipe-specific :term:`WORKDIR` directories. Thus, the
 This directory holds information that BitBake uses for accounting
 purposes to track what tasks have run and when they have run. The
 directory is sub-divided by architecture, package name, and version.
-Following is an example::
+Here is an example::
 
       stamps/all-poky-linux/distcc-config/1.0-r0.do_build-2fdd....2do
 
@@ -589,7 +589,7 @@ install" places its output that is then split into sub-packages within
 ``build/tmp/work/tunearch/recipename/version/``
 -----------------------------------------------
 
-The recipe work directory - ``${WORKDIR}``.
+The recipe work directory --- ``${WORKDIR}``.
 
 As described earlier in the
 ":ref:`structure-build-tmp-sysroots`" section,
@@ -654,8 +654,8 @@ recipes. In practice, this is only used for ``gcc`` and its variants
 
 .. _structure-meta:
 
-The Metadata - ``meta/``
-========================
+The Metadata --- ``meta/``
+==========================
 
 As mentioned previously, :term:`Metadata` is the core of the
 Yocto Project. Metadata has several important subdivisions:

@@ -4,7 +4,7 @@
 Yocto Project Terms
 *******************
 
-Following is a list of terms and definitions users new to the Yocto Project
+Here is a list of terms and definitions users new to the Yocto Project
 development environment might find helpful. While some of these terms are
 universal, the list includes them just in case:
 
@@ -66,8 +66,8 @@ universal, the list includes them just in case:
       (i.e. :ref:`ref-manual/structure:\`\`oe-init-build-env\`\``). The
       :term:`TOPDIR` variable points to the Build Directory.
 
-      You have a lot of flexibility when creating the Build Directory.
-      Following are some examples that show how to create the directory.  The
+      You have a lot of flexibility when creating the :term:`Build Directory`.
+      Here are some examples that show how to create the directory.  The
       examples assume your :term:`Source Directory` is named ``poky``:
 
          -  Create the Build Directory inside your Source Directory and let
@@ -108,6 +108,24 @@ universal, the list includes them just in case:
       The system used to build images in a Yocto Project Development
       environment. The build system is sometimes referred to as the development
       host.
+
+   :term:`buildtools`
+      Build tools in binary form, providing required versions of development
+      tools (such as Git, GCC, Python and make), to run the OpenEmbedded build
+      system on a development host without such minimum versions.
+
+      See the ":ref:`system-requirements-buildtools`" paragraph in the
+      Reference Manual for details about downloading or building an archive
+      of such tools.
+
+   :term:`buildtools-extended`
+      A set of :term:`buildtools` binaries extended with additional development
+      tools, such as a required version of the GCC compiler to run the
+      OpenEmbedded build system.
+
+   :term:`buildtools-make`
+      A variant of :term:`buildtools`, just providing the required
+      version of ``make`` to run the OpenEmbedded build system.
 
    :term:`Classes`
       Files that provide for logic encapsulation and inheritance so that
@@ -324,7 +342,7 @@ universal, the list includes them just in case:
       your Linux distribution.
 
       Another point worth noting is that historically within the Yocto
-      Project, recipes were referred to as packages - thus, the existence
+      Project, recipes were referred to as packages --- thus, the existence
       of several BitBake variables that are seemingly mis-named, (e.g.
       :term:`PR`, :term:`PV`, and
       :term:`PE`).
@@ -440,7 +458,7 @@ universal, the list includes them just in case:
      Directory created by unpacking a released tarball as compared to
      cloning ``git://git.yoctoproject.org/poky``. When you unpack a
      tarball, you have an exact copy of the files based on the time of
-     release - a fixed release point. Any changes you make to your local
+     release --- a fixed release point. Any changes you make to your local
      files in the Source Directory are on top of the release and will
      remain local only. On the other hand, when you clone the ``poky`` Git
      repository, you have an active development repository with access to

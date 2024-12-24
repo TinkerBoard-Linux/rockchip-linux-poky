@@ -82,7 +82,7 @@ Follow these general steps to create your layer without using tools:
       LAYERVERSION_yoctobsp = "4"
       LAYERSERIES_COMPAT_yoctobsp = "dunfell"
 
-   Following is an explanation of the layer configuration file:
+   Here is an explanation of the layer configuration file:
 
    -  :term:`BBPATH`: Adds the layer's
       root directory to BitBake's search path. Through the use of the
@@ -191,7 +191,7 @@ following list:
 -  *Structure Your Layers:* Proper use of overrides within append files
    and placement of machine-specific files within your layer can ensure
    that a build is not using the wrong Metadata and negatively impacting
-   a build for a different machine. Following are some examples:
+   a build for a different machine. Here are some examples:
 
    -  *Modify Variables to Support a Different Machine:* Suppose you
       have a layer named ``meta-one`` that adds support for building
@@ -313,7 +313,7 @@ Logo for your layer and application. The process consists of two parts:
    successful compatibility registration.
 
 #. Completion of an application acceptance form, which you can find at
-   :yocto_home:`/webform/yocto-project-compatible-registration`.
+   :yocto_home:`/compatible-registration/`.
 
 To be granted permission to use the logo, you need to satisfy the
 following:
@@ -337,7 +337,7 @@ application, you can use the Yocto Project Compatibility Logo with your
 layer and the application that uses your layer.
 
 To access the form, use this link:
-:yocto_home:`/webform/yocto-project-compatible-registration`.
+:yocto_home:`/compatible-registration`.
 Follow the instructions on the form to complete your application.
 
 The application consists of the following sections:
@@ -513,7 +513,7 @@ In the main recipe, note the :term:`SRC_URI`
 variable, which tells the OpenEmbedded build system where to find files
 during the build.
 
-Following is the append file, which is named ``formfactor_0.0.bbappend``
+Here is the append file, which is named ``formfactor_0.0.bbappend``
 and is from the Raspberry Pi BSP Layer named ``meta-raspberrypi``. The
 file is in the layer at ``recipes-bsp/formfactor``::
 
@@ -588,7 +588,7 @@ Directory`.  Here is the main ``xserver-xf86-config`` recipe, which is named
 	fi
    }
 
-Following is the append file, which is named ``xserver-xf86-config_%.bbappend``
+Here is the append file, which is named ``xserver-xf86-config_%.bbappend``
 and is from the Raspberry Pi BSP Layer named ``meta-raspberrypi``. The
 file is in the layer at ``recipes-graphics/xorg-xserver``::
 

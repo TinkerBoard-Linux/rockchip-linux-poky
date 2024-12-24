@@ -37,7 +37,7 @@ to each data source as a layer. For information on layers, see the
 ":ref:`dev-manual/layers:understanding and creating layers`"
 section of the Yocto Project Development Tasks Manual.
 
-Following are some brief details on these core components. For
+Here are some brief details on these core components. For
 additional information on how these components interact during a build,
 see the
 ":ref:`overview-manual/concepts:openembedded build system concepts`"
@@ -565,7 +565,7 @@ Local Projects
 ~~~~~~~~~~~~~~
 
 Local projects are custom bits of software the user provides. These bits
-reside somewhere local to a project - perhaps a directory into which the
+reside somewhere local to a project --- perhaps a directory into which the
 user checks in items (e.g. a local directory containing a development
 source tree used by the group).
 
@@ -1026,7 +1026,7 @@ processing includes creation of a manifest file and optimizations.
 The manifest file (``.manifest``) resides in the same directory as the
 root filesystem image. This file lists out, line-by-line, the installed
 packages. The manifest file is useful for the
-:ref:`testimage <ref-classes-testimage*>` class,
+:ref:`testimage <ref-classes-testimage>` class,
 for example, to determine whether or not to run specific tests. See the
 :term:`IMAGE_MANIFEST`
 variable for additional information.
@@ -1351,10 +1351,9 @@ can initialize the environment before using the tools.
       the :doc:`/sdk-manual/index` manual.
 
 All the output files for an SDK are written to the ``deploy/sdk`` folder
-inside the :term:`Build Directory` as
-shown in the previous figure. Depending on the type of SDK, there are
-several variables to configure these files. Here are the variables
-associated with an extensible SDK:
+inside the :term:`Build Directory` as shown in the previous figure. Depending
+on the type of SDK, there are several variables to configure these files.
+The variables associated with an extensible SDK are:
 
 -  :term:`DEPLOY_DIR`: Points to
    the ``deploy`` directory.
@@ -1408,7 +1407,7 @@ This next list, shows the variables associated with a standard SDK:
    Lists packages that make up the target part of the SDK (i.e. the part
    built for the target hardware).
 
--  :term:`SDKPATH`: Defines the
+-  :term:`SDKPATHINSTALL`: Defines the
    default SDK installation path offered by the installation script.
 
 -  :term:`SDK_HOST_MANIFEST`:
@@ -1648,7 +1647,7 @@ you a good idea of when the task's data changes.
 
 To complicate the problem, there are things that should not be included
 in the checksum. First, there is the actual specific build path of a
-given task - the :term:`WORKDIR`. It
+given task --- the :term:`WORKDIR`. It
 does not matter if the work directory changes because it should not
 affect the output for target packages. Also, the build process has the
 objective of making native or cross packages relocatable.
@@ -1707,7 +1706,7 @@ need to fix this situation.
 Thus far, this section has limited discussion to the direct inputs into
 a task. Information based on direct inputs is referred to as the
 "basehash" in the code. However, the question of a task's indirect
-inputs still exits - items already built and present in the
+inputs still exits --- items already built and present in the
 :term:`Build Directory`. The checksum (or
 signature) for a particular task needs to add the hashes of all the
 tasks on which the particular task depends. Choosing which dependencies
@@ -2230,3 +2229,173 @@ For more information, see the
 BitBake User Manual. You can also reference the "`Why Not
 Fakeroot? <https://github.com/wrpseudo/pseudo/wiki/WhyNotFakeroot>`__"
 article for background information on Fakeroot and Pseudo.
+
+BitBake Tasks Map
+=================
+
+To understand how BitBake operates in the build directory and environment
+we can consider the following recipes and diagram, to have full picture
+about the tasks that BitBake runs to generate the final package file
+for the recipe.
+
+We will have two recipes as an example:
+
+-  ``libhello``: A recipe that provides a shared library
+-  ``sayhello``: A recipe that uses ``libhello`` library to do its job
+
+.. note::
+
+   ``sayhello`` depends on ``libhello`` at compile time as it needs the shared
+   library to do the dynamic linking process. It also depends on it at runtime
+   as the shared library loader needs to find the library.
+   For more details about dependencies check :ref:`ref-varlocality-recipe-dependencies`.
+
+``libhello`` sources are as follows:
+
+-  ``LICENSE``: This is the license associated with this library
+-  ``Makefile``: The file used by ``make`` to build the library
+-  ``hellolib.c``: The implementation of the library
+-  ``hellolib.h``: The C header of the library
+
+``sayhello`` sources are as follows:
+
+-  ``LICENSE``: This is the license associated with this project
+-  ``Makefile``: The file used by ``make`` to build the project
+-  ``sayhello.c``: The source file of the project
+
+Before presenting the contents of each file, here are the steps
+that we need to follow to accomplish what we want in the first place,
+which is integrating ``sayhello`` in our root file system:
+
+#.  Create a Git repository for each project with the corresponding files
+
+#.  Create a recipe for each project
+
+#.  Make sure that ``sayhello`` recipe :term:`DEPENDS` on ``libhello``
+
+#.  Make sure that ``sayhello`` recipe :term:`RDEPENDS` on ``libhello``
+
+#.  Add ``sayhello`` to :term:`IMAGE_INSTALL` to integrate it into
+    the root file system
+
+The contents of ``libhello/Makefile`` are::
+
+   LIB=libhello.so
+
+   all: $(LIB)
+
+   $(LIB): hellolib.o
+      $(CC) $< -Wl,-soname,$(LIB).1 -fPIC $(LDFLAGS) -shared -o $(LIB).1.0
+
+   %.o: %.c
+      $(CC) -c $<
+
+   clean:
+      rm -rf *.o *.so*
+
+.. note::
+
+   When creating shared libraries, it is strongly recommended to follow the Linux
+   conventions and guidelines (see `this article
+   <https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html>`__
+   for some background).
+
+.. note::
+
+   When creating ``Makefile`` files, it is strongly recommended to use ``CC``, ``LDFLAGS``
+   and ``CFLAGS`` as BitBake will set them as environment variables according
+   to your build configuration.
+
+The contents of ``libhello/hellolib.h`` are::
+
+   #ifndef HELLOLIB_H
+   #define HELLOLIB_H
+
+   void Hello();
+
+   #endif
+
+The contents of ``libhello/hellolib.c`` are::
+
+   #include <stdio.h>
+
+   void Hello(){
+      puts("Hello from a Yocto demo \n");
+   }
+
+The contents of ``sayhello/Makefile`` are::
+
+   EXEC=sayhello
+   LDFLAGS += -lhello
+
+   all: $(EXEC)
+
+   $(EXEC): sayhello.c
+      $(CC) $< $(LDFLAGS) $(CFLAGS) -o $(EXEC)
+
+   clean:
+      rm -rf $(EXEC) *.o
+
+The contents of ``sayhello/sayhello.c`` are::
+
+   #include <hellolib.h>
+
+   int main(){
+      Hello();
+      return 0;
+   }
+
+The contents of ``libhello_0.1.bb`` are::
+
+   SUMMARY = "Hello demo library"
+   DESCRIPTION = "Hello shared library used in Yocto demo"
+
+   # NOTE: Set the License according to the LICENSE file of your project
+   #       and then add LIC_FILES_CHKSUM accordingly
+   LICENSE = "CLOSED"
+
+   # Assuming the branch is main
+   # Change <username> accordingly
+   SRC_URI = "git://github.com/<username>/libhello;branch=main;protocol=https"
+
+   S = "${WORKDIR}/git"
+
+   do_install(){
+      install -d ${D}${includedir}
+      install -d ${D}${libdir}
+
+      install hellolib.h ${D}${includedir}
+      oe_soinstall ${PN}.so.${PV} ${D}${libdir}
+   }
+
+The contents of ``sayhello_0.1.bb`` are::
+
+   SUMMARY = "SayHello demo"
+   DESCRIPTION = "SayHello project used in Yocto demo"
+
+   # NOTE: Set the License according to the LICENSE file of your project
+   #       and then add LIC_FILES_CHKSUM accordingly
+   LICENSE = "CLOSED"
+
+   # Assuming the branch is main
+   # Change <username> accordingly
+   SRC_URI = "git://github.com/<username>/sayhello;branch=main;protocol=https"
+
+   DEPENDS += "libhello"
+   RDEPENDS:${PN} += "libhello"
+
+   S = "${WORKDIR}/git"
+
+   do_install(){
+      install -d ${D}/usr/bin
+      install -m 0700 sayhello ${D}/usr/bin
+   }
+
+After placing the recipes in a custom layer we can run ``bitbake sayhello``
+to build the recipe.
+
+The following diagram shows the sequences of tasks that BitBake
+executes to accomplish that.
+
+.. image:: svg/bitbake_tasks_map.*
+   :width: 100%

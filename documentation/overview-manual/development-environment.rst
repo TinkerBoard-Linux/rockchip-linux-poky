@@ -52,7 +52,7 @@ A development host or :term:`Build Host` is key to
 using the Yocto Project. Because the goal of the Yocto Project is to
 develop images or applications that run on embedded hardware,
 development of those images and applications generally takes place on a
-system not intended to run the software - the development host.
+system not intended to run the software --- the development host.
 
 You need to set up a development host in order to use it with the Yocto
 Project. Most find that it is best to have a native Linux machine
@@ -131,6 +131,14 @@ are several ways of working in the Yocto Project environment:
    For steps that show you how to set up your development host to use
    Toaster and on how to use Toaster in general, see the
    :doc:`/toaster-manual/index`.
+
+-  *Using the VSCode Extension:* You can use the `Yocto Project BitBake
+   <https://marketplace.visualstudio.com/items?itemName=yocto-project.yocto-bitbake>`__
+   extension for Visual Studio Code to start your BitBake builds through a
+   graphical user interface.
+
+   Learn more about the VSCode Extension on the `extension's marketplace page
+   <https://marketplace.visualstudio.com/items?itemName=yocto-project.yocto-bitbake>`__.
 
 Yocto Project Source Repositories
 =================================

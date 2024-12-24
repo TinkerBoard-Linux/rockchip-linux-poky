@@ -32,6 +32,10 @@ build host running Linux.
       OpenEmbedded build system, see the
       :doc:`/brief-yoctoprojectqs/index` document.
 
+   -  You can also use the `Yocto Project BitBake
+      <https://marketplace.visualstudio.com/items?itemName=yocto-project.yocto-bitbake>`__
+      extension for Visual Studio Code to build images.
+
 The build process creates an entire Linux distribution from source and
 places it in your :term:`Build Directory` under ``tmp/deploy/images``. For
 detailed information on the build process using BitBake, see the
@@ -156,7 +160,7 @@ Follow these steps to set up and execute multiple configuration builds:
    The location for these multiconfig configuration files is specific.
    They must reside in the current :term:`Build Directory` in a sub-directory of
    ``conf`` named ``multiconfig`` or within a layer's ``conf`` directory
-   under a directory named ``multiconfig``. Following is an example that defines
+   under a directory named ``multiconfig``. Here is an example that defines
    two configuration files for the "x86" and "arm" multiconfigs:
 
    .. image:: figures/multiconfig_files.png

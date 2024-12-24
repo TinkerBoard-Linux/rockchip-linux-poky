@@ -26,8 +26,7 @@ provide packages for these, you can install and use the Buildtools
 tarball, which provides an SDK-like environment containing them.
 
 For more information on this requirement, see the
-":ref:`ref-manual/system-requirements:required git, tar, python and gcc versions`"
-section.
+":ref:`system-requirements-buildtools`" section.
 
 .. _migration-1.5-atom-pc-bsp:
 
@@ -240,7 +239,7 @@ Automated Image Testing
 -----------------------
 
 A new automated image testing framework has been added through the
-:ref:`ref-classes-testimage*` classes. This
+:ref:`ref-classes-testimage` classes. This
 framework replaces the older ``imagetest-qemu`` framework.
 
 You can learn more about performing automated image tests in the
@@ -252,7 +251,7 @@ section in the Yocto Project Development Tasks Manual.
 Build History
 -------------
 
-Following are changes to Build History:
+The changes to Build History are:
 
 -  Installed package sizes: ``installed-package-sizes.txt`` for an image
    now records the size of the files installed by each package instead
@@ -275,7 +274,7 @@ section in the Yocto Project Development Tasks Manual.
 ``udev``
 --------
 
-Following are changes to ``udev``:
+The changes to ``udev`` are:
 
 -  ``udev`` no longer brings in ``udev-extraconf`` automatically through
    :term:`RRECOMMENDS`, since this was originally
@@ -319,7 +318,7 @@ Removed and Renamed Recipes
 Other Changes
 -------------
 
-Following is a list of short entries describing other changes:
+Here is a list of short entries describing other changes:
 
 -  ``run-postinsts``: Make this generic.
 
